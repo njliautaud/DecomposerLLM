@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package ghidra.llm;
+
+// Service definition for Ghidra LLM integration
+service GhidraLLM {
+    // Generate a response from the LLM
+    rpc QueryLLM (QueryRequest) returns (QueryResponse) {}
+    
+    // Analyze a binary file
+    rpc AnalyzeBinary (BinaryAnalysisRequest) returns (BinaryAnalysisResponse) {}
+    
+    // Explain code or assembly
+    rpc ExplainCode (CodeExplanationRequest) returns (CodeExplanationResponse) {}
+    
+    // Suggest next analysis steps
+    rpc SuggestAnalysis (AnalysisSuggestionRequest) returns (AnalysisSuggestionResponse) {}
+}
+
+// Request message for LLM queries
+message QueryRequest {
+    string query = 1;
+    string context = 2;
+    map<string, string> metadata = 3;
+}
+
+// Response message for LLM queries
+message QueryResponse {
+    string response = 1;
+}
+
+// Request message for binary analysis
+message BinaryAnalysisRequest {
+    string binary_path = 1;
+    string architecture = 2;
+    uint64 entry_point = 3;
+    repeated Section sections = 4;
+    repeated Import imports = 5;
+    repeated Export exports = 6;
+}
+
+// Response message for binary analysis
+message BinaryAnalysisResponse {
+    string analysis = 1;
+}
+
+// Request message for code explanation
+message CodeExplanationRequest {
+    string code = 1;
+    string language = 2;
+    string context = 3;
+}
+
+// Response message for code explanation
+message CodeExplanationResponse {
+    string explanation = 1;
+}
+
+// Request message for analysis suggestions
+message AnalysisSuggestionRequest {
+    string current_analysis = 1;
+    repeated string completed_steps = 2;
+    map<string, string> findings = 3;
+}
+
+// Response message for analysis suggestions
+message AnalysisSuggestionResponse {
+    repeated string suggested_steps = 1;
+}
+
+// Section information
+message Section {
+    string name = 1;
+    uint64 start_address = 2;
+    uint64 end_address = 3;
+    string permissions = 4;
+}
+
+// Import information
+message Import {
+    string name = 1;
+    string library = 2;
+    uint64 address = 3;
+}
+
+// Export information
+message Export {
+    string name = 1;
+    uint64 address = 2;
+    string type = 3;
+} 
